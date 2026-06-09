@@ -10,6 +10,17 @@ class OpensslAT4 < Formula
     regex(/href=.*?openssl[._-]v?(4(?:\.\d+)+)\.t/i)
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/otsge/draft"
+    sha256 arm64_tahoe:   "0434afd6f52f98208daebc6eef3ada2b53123068e8d9a72ae794b89f4fb678d1"
+    sha256 arm64_sequoia: "9520c6eeb8938943ba99bbaef3caec34a1231456a9ececdfbeac8ef817bbd777"
+    sha256 arm64_sonoma:  "414d801767e349728d246d972aa7a08c365eb97716dd7c54f054a2f0c4c6a339"
+    sha256 tahoe:         "62354208ae7be872bdb40d629b3c7db8f3ec2d54bc50f26a6aa223567e24b325"
+    sha256 sequoia:       "72847201f2c80cff49f980ce33eda2d667e9a385ffb1f52442728ec674c94364"
+    sha256 arm64_linux:   "51b2c20a0b8bf595609178b7c523c36a74a5e342ca0e2d63c90518625fddd829"
+    sha256 x86_64_linux:  "a8a62ac6c3c7bb0cc1043f0c3001f3f7fe71198dccee9a67e8a03a053b1323c3"
+  end
+
   keg_only :versioned_formula
 
   depends_on "brotli"
