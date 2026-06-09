@@ -6,6 +6,17 @@ class Libngtcp2 < Formula
   sha256 "59d5b4211e96970f2d3d5e6876f73dce03414800ba04aa56835b132fce8de730"
   license "MIT"
 
+  bottle do
+    root_url "https://ghcr.io/v2/otsge/draft"
+    sha256 cellar: :any, arm64_tahoe:   "ca03446fff9e78b3856d8516147621964a26034f019feb0577055e98c2976ffe"
+    sha256 cellar: :any, arm64_sequoia: "489c9d3c70e79b476c81f2162e6f7e4fc5400df8d4dfa09b14c7d9cde0097310"
+    sha256 cellar: :any, arm64_sonoma:  "a35728e318f437cda16c8f3195bce9b080afd3eb05d0f84ab5dd3e921b536a8e"
+    sha256 cellar: :any, tahoe:         "d50b7ecd596abaacaf54bfb3f2000938a027e7b22a72eb65f0a51dcba71ae2e1"
+    sha256 cellar: :any, sequoia:       "7ae0b4b824b586a40eecec2c8106a4ff20e8a00e820049c85eb7a407bb592663"
+    sha256 cellar: :any, arm64_linux:   "d74f2762e4534b360fbb61338dfc901d22afb58405d97e0adff23673da95909d"
+    sha256 cellar: :any, x86_64_linux:  "c319b096c52fa7f3b8df12edda426a135352c93fb48305ab10b54bb83f0b3658"
+  end
+
   head do
     url "https://github.com/ngtcp2/ngtcp2.git", branch: "main"
 
