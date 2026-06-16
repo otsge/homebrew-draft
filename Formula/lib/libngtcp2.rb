@@ -29,7 +29,7 @@ class Libngtcp2 < Formula
   depends_on "otsge/draft/openssl@4"
 
   def install
-    system "autoreconf", "-i" if build.head?
+    system "autoreconf", "-fiv" if build.head?
     system "./configure", "--disable-silent-rules", *std_configure_args
     system "make", "install"
   end
