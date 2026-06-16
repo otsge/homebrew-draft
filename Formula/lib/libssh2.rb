@@ -46,7 +46,7 @@ class Libssh2 < Formula
       --with-libssl-prefix=#{Formula["openssl@4"].opt_prefix}
     ]
 
-    system "./buildconf" if build.head?
+    system "./buildconf", "--force" if build.head?
     system "./configure", *std_configure_args, *args
     system "make", "install"
   end
