@@ -23,13 +23,9 @@ class OpensslAT4 < Formula
 
   keg_only :versioned_formula
 
-  depends_on "brotli"
   depends_on "ca-certificates"
-  depends_on "zstd"
 
   on_linux do
-    depends_on "zlib-ng-compat"
-
     resource "Test::Harness" do
       url "https://cpan.metacpan.org/authors/id/L/LE/LEONT/Test-Harness-3.52.tar.gz"
       mirror "http://cpan.metacpan.org/authors/id/L/LE/LEONT/Test-Harness-3.52.tar.gz"
@@ -37,9 +33,9 @@ class OpensslAT4 < Formula
     end
 
     resource "Test::More" do
-      url "https://cpan.metacpan.org/authors/id/E/EX/EXODIST/Test-Simple-1.302219.tar.gz"
-      mirror "http://cpan.metacpan.org/authors/id/E/EX/EXODIST/Test-Simple-1.302219.tar.gz"
-      sha256 "420600911230de768427f6646758d89b6c07977b565e5b40118e5b8440dbb30b"
+      url "https://cpan.metacpan.org/authors/id/E/EX/EXODIST/Test-Simple-1.302222.tar.gz"
+      mirror "http://cpan.metacpan.org/authors/id/E/EX/EXODIST/Test-Simple-1.302222.tar.gz"
+      sha256 "7cf84a18d6c9450e53ae8b4de5d5fa32c9fe99f3cebbe408fe59433f19921ec2"
     end
 
     resource "ExtUtils::MakeMaker" do
@@ -54,17 +50,8 @@ class OpensslAT4 < Formula
       --prefix=#{prefix}
       --openssldir=#{pkgetc}
       --libdir=lib
-      --with-brotli-include=#{Formula["brotli"].opt_include}
-      --with-brotli-lib=#{Formula["brotli"].opt_lib}
-      --with-zstd-include=#{Formula["zstd"].opt_include}
-      --with-zstd-lib=#{Formula["zstd"].opt_lib}
-      enable-brotli
-      enable-zstd
-      zlib
     ]
     on_linux do
-      args << "--with-zlib-include=#{Formula["zlib-ng-compat"].opt_include}"
-      args << "--with-zlib-lib=#{Formula["zlib-ng-compat"].opt_lib}"
       args += (ENV.cflags || "").split
       args += (ENV.cppflags || "").split
       args += (ENV.ldflags || "").split
