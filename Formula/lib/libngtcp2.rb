@@ -8,13 +8,14 @@ class Libngtcp2 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/otsge/draft"
-    sha256 cellar: :any, arm64_tahoe:   "ca03446fff9e78b3856d8516147621964a26034f019feb0577055e98c2976ffe"
-    sha256 cellar: :any, arm64_sequoia: "489c9d3c70e79b476c81f2162e6f7e4fc5400df8d4dfa09b14c7d9cde0097310"
-    sha256 cellar: :any, arm64_sonoma:  "a35728e318f437cda16c8f3195bce9b080afd3eb05d0f84ab5dd3e921b536a8e"
-    sha256 cellar: :any, tahoe:         "d50b7ecd596abaacaf54bfb3f2000938a027e7b22a72eb65f0a51dcba71ae2e1"
-    sha256 cellar: :any, sequoia:       "7ae0b4b824b586a40eecec2c8106a4ff20e8a00e820049c85eb7a407bb592663"
-    sha256 cellar: :any, arm64_linux:   "d74f2762e4534b360fbb61338dfc901d22afb58405d97e0adff23673da95909d"
-    sha256 cellar: :any, x86_64_linux:  "c319b096c52fa7f3b8df12edda426a135352c93fb48305ab10b54bb83f0b3658"
+    rebuild 1
+    sha256 cellar: :any, arm64_tahoe:   "ed63c1d164e2b454f15e724cdd022c692d12c0b9c57113f8ef61cab2cdcd923d"
+    sha256 cellar: :any, arm64_sequoia: "150228882bd99c3510f96bb28684b45cd68f19ca2848a5f22fdc0e13b51cc65e"
+    sha256 cellar: :any, arm64_sonoma:  "2214347a0b1de62f78dd1b8ba02c1ba60d4b00f734694761268e7f7d16c764de"
+    sha256 cellar: :any, tahoe:         "f1df79ac19e4834300cade13f809406f582d55664e9f099e5fb7e1e856bafa83"
+    sha256 cellar: :any, sequoia:       "a44a06fef115ed79d95ea7c74717f948c60627ffd5cdec681d91ff1c9916e5e0"
+    sha256 cellar: :any, arm64_linux:   "df4a68d6e5f2a82438dd9a503125a63b573cc0ed32f76a9b4c952c3f6b4bdfeb"
+    sha256 cellar: :any, x86_64_linux:  "228b44faf8d2c8f37a4f6f344eb11394cea2df637dcca987f26d66e642b56b60"
   end
 
   head do
