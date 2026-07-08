@@ -1,10 +1,13 @@
-# Copyright IBM Corp. 2020, 2025
-# SPDX-License-Identifier: MPL-2.0
-
 class Packer < Formula
   desc "Tool for creating identical machine images"
-  homepage "https://www.packer.io/"
+  homepage "https://releases.hashicorp.com/packer/"
   version "1.15.4"
+  license "MPL-2.0"
+
+  livecheck do
+    url :homepage
+    regex(%r{href=["']/packer/(\d+(?:\.\d+)+)/["' >]}i)
+  end
 
   if OS.mac? && Hardware::CPU.intel?
     url "https://releases.hashicorp.com/packer/1.15.4/packer_1.15.4_darwin_amd64.zip"

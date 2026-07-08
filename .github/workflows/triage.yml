@@ -434,6 +434,17 @@ jobs:
               keep_if_no_match: true
               allow_any_match: true
 
+            - label: CI-no-bottles
+              path: "Formula/.*(\
+                mtell|\
+                packer|\
+                softnet|\
+                tart-guest-agent|\
+                tart\
+                ).rb"
+              keep_if_no_match: true
+              allow_any_match: true
+
             - label: bump-formula-pr
               pr_body_content: Created with `brew bump-formula-pr`
 

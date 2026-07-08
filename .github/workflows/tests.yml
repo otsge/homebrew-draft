@@ -78,7 +78,7 @@ jobs:
           done
   test-bot:
     needs: changed_files
-    if: ${{ github.event_name == 'pull_request' && (needs.changed_files.outputs.added-files-count > 0 || needs.changed_files.outputs.modified-files-count > 0) }}
+    if: ${{ github.event_name == 'pull_request' && (needs.changed_files.outputs.added-files-count > 0 || needs.changed_files.outputs.modified-files-count > 0) && !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
     continue-on-error: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'CI-no-fail-fast-syntax') }}
     strategy:
       matrix:
