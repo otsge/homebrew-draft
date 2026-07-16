@@ -3,8 +3,8 @@
 
 class Tart < Formula
   desc "Run macOS and Linux VMs on Apple Hardware"
-  homepage "https://github.com/cirruslabs/tart"
-  url "https://github.com/cirruslabs/tart/releases/download/2.32.1/tart.tar.gz"
+  homepage "https://github.com/openai/tart"
+  url "https://github.com/openai/tart/releases/download/2.32.1/tart.tar.gz"
   sha256 "8554ab4f7fc12afe52f9b7e3093a935673cbac737a83973d2db7a0683c814529"
   license "FSL-1.1-ALv2"
 
