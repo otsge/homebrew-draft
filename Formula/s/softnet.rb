@@ -4,8 +4,8 @@
 class Softnet < Formula
   desc "Software networking with isolation for Tart"
   homepage "https://github.com/openai/softnet"
-  url "https://github.com/openai/softnet/releases/download/0.20.0/softnet.tar.gz"
-  sha256 "46f6d5056aaa3d445f56040283d60d9b91980634cb525d8bb6b687a83b62575c"
+  url "https://github.com/openai/softnet/releases/download/0.20.1/softnet.tar.gz"
+  sha256 "4a94100aac9bc83b5527af923217ab615321a5322425484c4342947a6ae00214"
   license "FSL-1.1-ALv2"
 
   define_method(:install) do
