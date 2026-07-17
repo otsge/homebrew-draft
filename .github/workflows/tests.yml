@@ -478,16 +478,18 @@ jobs:
       actions: read
       checks: read
       contents: read
+      issues: read
       packages: read
       pull-requests: read
+      statuses: read
     steps:
       - name: Skip tests
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+        if: contains(github.event.pull_request.labels.*.name, 'CI-no-bottles')
         run: echo "No bottles need to be created"
 
       - name: Set up Homebrew
         id: set-up-homebrew
-        if: ${{ ! contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         uses: Homebrew/actions/setup-homebrew@main
         with:
           core: true
@@ -495,12 +497,12 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cleanup runner
-        if: ${{ ! contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         run: brew test-bot --only-cleanup-before
 
       - name: Get cache key
         id: setup-cache
-        if: ${{ ! contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         run: |
           cache_key_prefix="${RUNNER_OS}"
           if [ "${RUNNER_OS}" == "macOS" ]
@@ -521,7 +523,7 @@ jobs:
           } >> "${GITHUB_OUTPUT}"
 
       - name: Cache Homebrew Bundler RubyGems
-        if: ${{ ! contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         uses: actions/cache@main
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
@@ -529,7 +531,7 @@ jobs:
           restore-keys: ${{ steps.setup-cache.outputs.prefix }}-rubygems-
 
       - name: Setup Homebrew test environment
-        if: ${{ ! contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         run: |
           printf '\n<details><summary>brew test-bot --only-setup</summary>\n<p>\n\n' >> "$GITHUB_STEP_SUMMARY"
           printf '```\n' >> "${GITHUB_STEP_SUMMARY}"
@@ -538,11 +540,11 @@ jobs:
           printf '\n</p>\n</details>\n' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Tap syntax check
-        if: ${{ ! contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         run: brew test-bot --only-tap-syntax
 
       - name: Install FUSE-T
-        if: ${{ ! contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') && needs.changed_files.outputs.fuse-files == 'True' && runner.os == 'macOS' }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') && needs.changed_files.outputs.fuse-files == 'True' && runner.os == 'macOS' }}
         run: |
           brew tap otsge/keg
           brew trust otsge/keg
@@ -550,7 +552,6 @@ jobs:
 
       - name: Base64-encode GITHUB_TOKEN for HOMEBREW_DOCKER_REGISTRY_TOKEN
         id: base64-encode
-        if: ${{ ! contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -560,7 +561,7 @@ jobs:
 
       - name: Set up bottles directory
         id: setup-bottles
-        if: ${{ ! contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         run: |
           rm -rvf "${BOTTLES_DIR:?}"
           mkdir "${BOTTLES_DIR:?}"
@@ -578,7 +579,7 @@ jobs:
 
       - name: Build bottle for ${{ matrix.os }}
         id: build-bottle
-        if: ${{ ! contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         working-directory: ${{ env.BOTTLES_DIR }}
         env:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
@@ -621,7 +622,7 @@ jobs:
 
       - name: Post-build steps
         id: upload-bottles
-        if: ${{ ! contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         uses: Homebrew/actions/post-build@main
         with:
           runner: ${{ matrix.os }}
