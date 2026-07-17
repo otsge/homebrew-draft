@@ -26,7 +26,7 @@ class Libngtcp2 < Formula
   end
 
   depends_on "pkgconf" => :build
-  depends_on "otsge/draft/openssl@4"
+  depends_on "openssl@4"
 
   def install
     system "autoreconf", "-fiv" if build.head?
