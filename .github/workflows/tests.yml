@@ -358,7 +358,6 @@ jobs:
 
             - label: CI-no-bottles
               path: "Formula/.*(\
-                gitlab-tart-executor|\
                 mtell|\
                 packer|\
                 softnet|\
@@ -595,11 +594,11 @@ jobs:
           if [[ "${OPENSSL_4}" == "TRUE" && "${{ runner.os }}" == "macOS" ]]
           then
             sed -i '' 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
-            sed -i '' 's#depends_on "openssl@4"#depends_on "otsge/draft/openssl@4"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
+            sed -i '' 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
           elif [[ "${OPENSSL_4}" == "TRUE" && "${{ runner.os }}" == "Linux" ]]
           then
             sed -i 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
-            sed -i 's#depends_on "openssl@4"#depends_on "otsge/draft/openssl@4"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
+            sed -i 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
           fi
           if [[ "${{ runner.os }}" == "macOS" && "${{ runner.arch }}" == "X64" ]]
           then
