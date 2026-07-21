@@ -35,389 +35,7 @@ permissions:
   contents: read
 
 jobs:
-  triage:
-    runs-on: ubuntu-slim
-    permissions:
-      contents: read
-      issues: write
-      pull-requests: write
-      statuses: write
-    steps:
-      - name: Label pull request
-        uses: Homebrew/actions/label-pull-requests@main
-        if: always()
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          def: |
-            - label: new formula
-              status: added
-              path: Formula/.+
-              allow_any_match: true
-
-            - label: marked for removal/rejection
-              status: removed
-              path: Formula/.+
-
-            - label: no ARM bottle
-              path: Formula/.+
-              content: '\n    sha256.* (?!.*(?:arm64_|_linux)).+: +"[a-fA-F0-9]+"\n'
-              missing_content: '\n    sha256.* (arm64_.+|all): +"[a-fA-F0-9]+"\n'
-
-            - label: no Linux bottle
-              path: Formula/.+
-              content: \n  bottle do\n
-              missing_content:
-                - '\n    sha256.* (x86_64|arm64)_linux: +"[a-fA-F0-9]+"\n'
-                - '\n    sha256.* all: +"[a-fA-F0-9]+"\n'
-                - depends_on :macos
-
-            - label: formula deprecated
-              path: Formula/.+
-              content: \n  deprecate!.*\n
-
-            - label: formula disabled
-              path: Formula/.+
-              content: \n  disable!.*\n
-
-            - label: missing license
-              path: Formula/.+
-              missing_content: \n  license .+\n
-
-            - label: deprecated license
-              path: Formula/.+
-              content: license .*"(GPL|LGPL|AGPL|GFDL)-[0-9].[0-9][+]?".*
-
-            - label: review no_autobump stanza
-              path: Formula/.+
-              content: 'no_autobump! because: :requires_manual_review'
-
-            - label: boost
-              path: Formula/.+
-              content: depends_on "boost(@[0-9.]+)?"
-
-            - label: ffmpeg
-              path: Formula/.+
-              content: depends_on "ffmpeg(@[0-9.]+)?"
-
-            - label: erlang
-              path: Formula/.+
-              content: depends_on "erlang(@[0-9.]+)?"
-
-            - label: go
-              path: Formula/.+
-              content: depends_on "go(@[0-9.]+)?"
-
-            - label: haskell
-              path: Formula/.+
-              content: depends_on "(ghc|haskell-stack)(@[0-9.]+)?"
-
-            - label: icu4c
-              path: Formula/.+
-              content: depends_on "icu4c(@[0-9.]+)?"
-
-            - label: java
-              path: Formula/.+
-              content: depends_on "openjdk(@[0-9.]+)?"
-
-            - label: linux-only
-              path: Formula/.+
-              content: depends_on :linux
-
-            - label: macos-only
-              path: Formula/.+
-              content: depends_on :macos
-
-            - label: meson
-              path: Formula/.+
-              content: depends_on "meson"
-
-            - label: lua
-              path: Formula/.+
-              content: depends_on "(lua|luajit|luajit-openresty)(@[0-9.]+)?"
-
-            - label: nodejs
-              path: Formula/.+
-              content: depends_on "node(@[0-9.]+)?"
-
-            - label: ocaml
-              path: Formula/.+
-              content: depends_on "ocaml(@[0-9.]+)?"
-
-            - label: perl
-              path: Formula/.+
-              content: (depends_on|uses_from_macos) "perl(@[0-9.]+)?"
-
-            - label: php
-              path: Formula/.+
-              content: (depends_on|uses_from_macos) "php(@[0-9.]+)?"
-
-            - label: python
-              path: Formula/.+
-              content: (depends_on|uses_from_macos) "python(@[0-9.]+)?"
-              missing_content: (depends_on|uses_from_macos) "python(@[0-9.]+)?" => \[?:(build|test)
-
-            - label: ruby
-              path: Formula/.+
-              content: (depends_on|uses_from_macos) "ruby(@[0-9.]+)?"
-
-            - label: rust
-              path: Formula/.+
-              content: depends_on "rust(@[0-9.]+)?"
-
-            - label: zig
-              path: Formula/.+
-              content: depends_on "zig(@[0-9.]+)?"
-
-            - label: dotnet
-              path: Formula/.+
-              content: depends_on "dotnet(@[0-9.]+)?"
-
-            - label: swift
-              path: Formula/.+
-              content: system "swift", "build"
-
-            - label: long build
-              path: "Formula/.*(\
-                agda|\
-                apache-pulsar|\
-                aws-sdk-cpp|\
-                cbmc|\
-                cp2k|\
-                deno|\
-                dotnet|\
-                emscripten|\
-                envoy|\
-                gcc|\
-                gdb|\
-                ghc|\
-                graph-tool|\
-                gstreamer|\
-                haskell-language-server|\
-                influxdb|\
-                libtensorflow|\
-                llvm@19|\
-                llvm|\
-                mame|\
-                metashell|\
-                mlkit|\
-                mpich|\
-                node|\
-                octave|\
-                opencascade|\
-                openfast|\
-                openvino|\
-                pcl|\
-                ponyc|\
-                prowler|\
-                pytorch|\
-                qtwebengine|\
-                root|\
-                rtabmap|\
-                rust|\
-                souffle|\
-                swift|\
-                texlive|\
-                v8|\
-                vtk\
-                )(@[0-9.]+)?.rb"
-              keep_if_no_match: true
-              allow_any_match: true
-
-            - label: long dependent tests
-              path: "Formula/.*(\
-                aom|\
-                at-spi2-core|\
-                boost|\
-                brotli|\
-                c-ares|\
-                cabal-install|\
-                cmake|\
-                cryptography|\
-                dav1d|\
-                freetype|\
-                frei0r|\
-                gcc|\
-                gettext|\
-                ghc|\
-                glib|\
-                gsettings-desktop-schemas|\
-                gtk\\+3|\
-                harfbuzz|\
-                highway|\
-                hwloc|\
-                icu4c|\
-                imath|\
-                jasper|\
-                jpeg-turbo|\
-                jpeg-xl|\
-                libcap|\
-                libgcrypt|\
-                libgpg-error|\
-                libidn2|\
-                libmicrohttpd|\
-                libnghttp2|\
-                libomp|\
-                libpng|\
-                librist|\
-                libtool|\
-                libunistring|\
-                mpfr|\
-                mpg123|\
-                node|\
-                numpy|\
-                openblas|\
-                openjdk|\
-                openjpeg|\
-                openssl@3|\
-                openssl@4|\
-                p11-kit|\
-                pango|\
-                pcre2|\
-                python@3.14|\
-                qtbase|\
-                rav1e|\
-                readline|\
-                rust|\
-                sdl2|\
-                shared-mime-info|\
-                sqlite|\
-                suite-sparse|\
-                unbound|\
-                xz|\
-                zstd\
-                ).rb"
-              keep_if_no_match: true
-              allow_any_match: true
-
-            - label: CI-build-dependents-from-source
-              path:
-                - "Formula/.*(\
-                    cabal-install|\
-                    docbook-xsl|\
-                    emscripten|\
-                    erlang|\
-                    ocaml|\
-                    ocaml-findlib|\
-                    ocaml-num|\
-                    openjdk|\
-                    pyqt-builder|\
-                    rust\
-                    )\\.rb"
-              missing_content: '\n  revision [0-9]+\n'
-              keep_if_no_match: true
-              allow_any_match: true
-
-            - label: CI-skip-recursive-dependents
-              path: "Formula/.*(\
-                alsa-lib|\
-                ca-certificates|\
-                certifi|\
-                cmake|\
-                curl|\
-                gettext|\
-                glib|\
-                harfbuzz|\
-                openssl@3|\
-                openssl@4|\
-                rust|\
-                sqlite|\
-                systemd|\
-                wayland-protocols\
-                ).rb"
-              keep_if_no_match: true
-              allow_any_match: true
-
-            - label: CI-linux-self-hosted
-              path: "Formula/.*(\
-                dart-sdk|\
-                dotnet|\
-                envoy|\
-                qt@5|\
-                qtwebengine|\
-                sui|\
-                teleport|\
-                texlive\
-                ).rb"
-              keep_if_no_match: true
-              allow_any_match: true
-
-            - label: CI-linux-self-hosted-deps
-              path: "Formula/.*(\
-                glib|\
-                libcap|\
-                libva|\
-                libxml2|\
-                mesa|\
-                openssl@3|\
-                openssl@4|\
-                python@3.14|\
-                zlib-ng-compat\
-                ).rb"
-              keep_if_no_match: true
-              allow_any_match: true
-
-            - label: CI-no-bottles
-              path: "Formula/.*(\
-                mtell|\
-                packer|\
-                softnet|\
-                tart-guest-agent|\
-                tart\
-                ).rb"
-              keep_if_no_match: true
-              allow_any_match: true
-
-            - label: bump-formula-pr
-              pr_body_content: Created with `brew bump-formula-pr`
-
-            - label: pip-audit
-              pr_body_content: Created by `brew-pip-audit`
-
-            - label: shell-completion
-              path: Formula/.+
-              patch_content: (generate_completions_from_executable|bash_completion|zsh_completion|fish_completion|pwsh_completion)
-
-  # Handle this separately since the `workflows` label affects bottle cache usage
-  # and hardens us against cache poisoning attacks.
-  workflows-label:
-    needs: triage
-    permissions:
-      contents: read
-      issues: write
-      pull-requests: write
-    if: always()
-    runs-on: ubuntu-slim
-    env:
-      PR: ${{ github.event.number }}
-    steps:
-      - name: Check pull request changed files
-        id: files
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          workflow_modified="$(
-            gh api \
-              --header 'Accept: application/vnd.github+json' \
-              --header 'X-GitHub-Api-Version: 2022-11-28' \
-              "repos/$GITHUB_REPOSITORY/pulls/$PR/files" \
-              --jq 'any(.[].filename; startswith(".github/workflows"))'
-          )"
-          # Fail closed.
-          echo "workflow_modified=${workflow_modified:-true}" >> "${GITHUB_OUTPUT}"
-
-      # Wait briefly in case of failure to make sure we don't end up
-      # hitting the same API error when trying `gh pr edit`.
-      - if: failure()
-        run: sleep 30
-
-      - name: Label PR
-        if: always() && fromJson(steps.files.outputs.workflow_modified)
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh pr edit --add-label workflows "$PR" --repo "$GITHUB_REPOSITORY"
-
   changed_files:
-    needs: workflows-label
     if: always()
     outputs:
       all-changed-files: ${{ steps.changed-files.outputs.all_changed_files }}
@@ -426,8 +44,9 @@ jobs:
       added-files-count: ${{ steps.changed-files.outputs.added_files_count }}
       modified-files-count: ${{ steps.changed-files.outputs.modified_files_count }}
       curl-files: ${{ steps.file-deps.outputs.curl }}
-      openssl4-files: ${{ steps.file-deps.outputs.openssl4 }}
       fuse-files: ${{ steps.file-deps.outputs.fuse }}
+      no-linux: ${{ steps.file-deps.outputs.no_linux }}
+      openssl4-files: ${{ steps.file-deps.outputs.openssl4 }}
       xcode26-files: ${{ steps.file-deps.outputs.xcode26 }}
     runs-on: ubuntu-latest
     name: Test changed-files
@@ -458,22 +77,17 @@ jobs:
             grep -qls 'xcode: \["26.0"' "$file" && echo "xcode26=True" >> "${GITHUB_OUTPUT}" || true
             grep -qls 'class Curl' "$file" && echo "curl=True" >> "${GITHUB_OUTPUT}" || true
             grep -qls 'depends_on.*openssl@4' "$file" && echo "openssl4=True" >> "${GITHUB_OUTPUT}" || true
+            grep -qls 'depends_on :macos' "$file" && echo "no_linux=True" >> "${GITHUB_OUTPUT}" || true
           done
 
-  test-bot:
+  test-bot-mac:
     needs: changed_files
     if: ${{ github.event_name == 'pull_request' && (needs.changed_files.outputs.added-files-count > 0 || needs.changed_files.outputs.modified-files-count > 0) }}
     continue-on-error: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'CI-no-fail-fast-syntax') }}
     strategy:
       matrix:
         os: [ macos-14, macos-15, macos-15-intel, macos-26, macos-26-intel ]
-        include:
-          - os: ubuntu-24.04
-            container: ghcr.io/homebrew/ubuntu24.04:main
-          - os: ubuntu-24.04-arm
-            container: ghcr.io/homebrew/ubuntu24.04:main
     runs-on: ${{ matrix.os }}
-    container: ${{ matrix.container }}
     permissions:
       actions: read
       checks: read
@@ -511,10 +125,6 @@ jobs:
             macos_version="${macos_full_version%%.*}"
             arch="$(uname -m)"
             cache_key_prefix="${macos_version}-${arch}"
-          elif [ "${RUNNER_OS}" == "Linux" ]
-          then
-            arch="$(uname -m)"
-            cache_key_prefix="Linux-${arch}"
           fi
           {
           echo "prefix=${cache_key_prefix}"
@@ -544,7 +154,7 @@ jobs:
         run: brew test-bot --only-tap-syntax
 
       - name: Install FUSE-T
-        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') && needs.changed_files.outputs.fuse-files == 'True' && runner.os == 'macOS' }}
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') && needs.changed_files.outputs.fuse-files == 'True' }}
         run: |
           brew tap otsge/keg
           brew trust otsge/keg
@@ -566,11 +176,7 @@ jobs:
           rm -rvf "${BOTTLES_DIR:?}"
           mkdir "${BOTTLES_DIR:?}"
 
-          if [[ "$RUNNER_OS" = Linux ]]; then
-            bottle_specifier="{ubuntu,linux}"
-          else
-            bottle_specifier="{macos-${MACOS_VERSION},${MACOS_VERSION}-${ARCH}}"
-          fi
+          bottle_specifier="{macos-${MACOS_VERSION},${MACOS_VERSION}-${ARCH}}"
 
           echo "bottle_specifier=$bottle_specifier" >> "$GITHUB_OUTPUT"
         env:
@@ -588,28 +194,19 @@ jobs:
           OPENSSL_4: ${{ (needs.changed_files.outputs.openssl4-files && 'TRUE') || 'FALSE' }}
           XCODE_26: ${{ (needs.changed_files.outputs.xcode26-files && 'TRUE') || 'FALSE' }}
         run:  |
-          if [[ "${IS_CURL}" == "TRUE" && "${{ runner.os }}" == "Linux" ]]
-          then
-            sed -i 's!uses_from_macos "curl"!# uses_from_macos "curl"!g' "$(brew --repository homebrew/core)"/Formula/r/rust.rb
-          fi
-          if [[ "${OPENSSL_4}" == "TRUE" && "${{ runner.os }}" == "macOS" ]]
+          if [[ "${OPENSSL_4}" == "TRUE" ]]
           then
             sed -i '' 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
             sed -i '' 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
-          elif [[ "${OPENSSL_4}" == "TRUE" && "${{ runner.os }}" == "Linux" ]]
-          then
-            sed -i 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
-            sed -i 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
           fi
-          if [[ "${{ runner.os }}" == "macOS" && "${{ runner.arch }}" == "X64" ]]
+          if [[ "${{ runner.arch }}" == "X64" ]]
           then
             cp /Users/runner/work/homebrew-draft/homebrew-draft/.github/workflows/files/tb_formulae "$(brew --prefix)"/Homebrew/Library/Homebrew/test_bot/formulae.rb
           fi
-          if [[ "${XCODE_26}" == "TRUE" && "${{ runner.os }}" == "macOS" && "${MACOS_VERSION}" == "15" && "${{runner.arch }}" == "ARM64" ]]
+          if [[ "${XCODE_26}" == "TRUE" && "${MACOS_VERSION}" == "15" && "${{runner.arch }}" == "ARM64" ]]
           then
-            brew tap xcodesorg/made && brew trust xcodesorg/made && brew install xcodesorg/made/xcodes
-            xcodes install 26.3
-            xcodes select 26.3
+            brew install xcodes
+            xcodes install --latest --select
           fi
           pushd "$(brew --repository)"
           s="$(git status --porcelain)"
@@ -629,9 +226,141 @@ jobs:
           bottles-directory: ${{ env.BOTTLES_DIR }}
           logs-directory: ${{ env.BOTTLES_DIR }}/logs
 
-  label-pr:
-    needs: test-bot
-    if: github.event_name == 'pull_request'
+  test-bot-linux:
+    needs: changed_files
+    if: ${{ github.event_name == 'pull_request' && needs.changed_files.outputs.no-linux == 'False' && (needs.changed_files.outputs.added-files-count > 0 || needs.changed_files.outputs.modified-files-count > 0) }}
+    continue-on-error: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'CI-no-fail-fast-syntax') }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            container: ghcr.io/homebrew/ubuntu24.04:main
+          - os: ubuntu-24.04-arm
+            container: ghcr.io/homebrew/ubuntu24.04:main
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
+    permissions:
+      actions: read
+      checks: read
+      contents: read
+      issues: read
+      packages: read
+      pull-requests: read
+      statuses: read
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@main
+        with:
+          core: true
+          cask: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cleanup runner
+        run: brew test-bot --only-cleanup-before
+
+      - name: Get cache key
+        id: setup-cache
+        run: |
+          cache_key_prefix="${RUNNER_OS}"
+          if [ "${RUNNER_OS}" == "Linux" ]
+          then
+            arch="$(uname -m)"
+            cache_key_prefix="Linux-${arch}"
+          fi
+          {
+          echo "prefix=${cache_key_prefix}"
+          echo "arch=${arch:-}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Cache Homebrew Bundler RubyGems
+        uses: actions/cache@main
+        with:
+          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
+          key: ${{ steps.setup-cache.outputs.prefix }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ steps.setup-cache.outputs.prefix }}-rubygems-
+
+      - name: Setup Homebrew test environment
+        run: |
+          printf '\n<details><summary>brew test-bot --only-setup</summary>\n<p>\n\n' >> "$GITHUB_STEP_SUMMARY"
+          printf '```\n' >> "${GITHUB_STEP_SUMMARY}"
+          HOMEBREW_NO_COLOR=1 brew test-bot --only-setup | tee -a "${GITHUB_STEP_SUMMARY}"
+          printf '```\n' >> "${GITHUB_STEP_SUMMARY}"
+          printf '\n</p>\n</details>\n' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Tap syntax check
+        run: brew test-bot --only-tap-syntax
+
+      - name: Base64-encode GITHUB_TOKEN for HOMEBREW_DOCKER_REGISTRY_TOKEN
+        id: base64-encode
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          base64_token=$(echo -n "${TOKEN}" | base64 | tr -d "\n")
+          echo "::add-mask::${base64_token}"
+          echo "token=${base64_token}" >> "${GITHUB_OUTPUT}"
+
+      - name: Set up bottles directory
+        id: setup-bottles
+        run: |
+          rm -rvf "${BOTTLES_DIR:?}"
+          mkdir "${BOTTLES_DIR:?}"
+
+          bottle_specifier="{ubuntu,linux}"
+
+          echo "bottle_specifier=$bottle_specifier" >> "$GITHUB_OUTPUT"
+        env:
+          ARCH: ${{ steps.setup-cache.outputs.arch }}
+
+      - name: Build bottle for ${{ matrix.os }}
+        id: build-bottle
+        working-directory: ${{ env.BOTTLES_DIR }}
+        env:
+          HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
+          IS_CURL: ${{ (needs.changed_files.outputs.curl-files && 'TRUE') || 'FALSE' }}
+          OPENSSL_4: ${{ (needs.changed_files.outputs.openssl4-files && 'TRUE') || 'FALSE' }}
+        run:  |
+          if [[ "${IS_CURL}" == "TRUE" ]]
+          then
+            sed -i 's!uses_from_macos "curl"!# uses_from_macos "curl"!g' "$(brew --repository homebrew/core)"/Formula/r/rust.rb
+          fi
+          if [[ "${OPENSSL_4}" == "TRUE" ]]
+          then
+            sed -i 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
+            sed -i 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
+          fi
+          # pushd "$(brew --repository)"
+          # s="$(git status --porcelain)"
+          # if [[ -n "$s" ]]
+          # then
+          #   git add . && git commit --amend --no-edit
+          # fi
+          # popd
+          brew test-bot --only-formulae --skip-online-checks --skip-dependents --root-url=https://ghcr.io/v2/otsge/draft
+
+      - name: Post-build steps
+        id: upload-bottles
+        uses: Homebrew/actions/post-build@main
+        with:
+          runner: ${{ matrix.os }}
+          bottles-directory: ${{ env.BOTTLES_DIR }}
+          logs-directory: ${{ env.BOTTLES_DIR }}/logs
+
+  label-pr-both:
+    needs: [changed_files, test-bot-mac, test-bot-linux]
+    if: ${{ github.event_name == 'pull_request' && needs.changed_files.outputs.no-linux == 'False' }}
+    runs-on: ubuntu-slim
+    steps:
+      - name: Label the Pull Request
+        id: label-the-pr
+        env:
+          GH_TOKEN: ${{ secrets.AUTOBUMP_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr edit "${PR_NUMBER}" --add-label "pr-pull" --repo "${GITHUB_REPOSITORY}"
+
+  label-pr-mac:
+    needs: [changed_files, test-bot-mac]
+    if: ${{ github.event_name == 'pull_request' && needs.changed_files.outputs.no-linux == 'True' }}
     runs-on: ubuntu-slim
     steps:
       - name: Label the Pull Request
