@@ -77,7 +77,7 @@ jobs:
             grep -qls 'xcode: \["26.0"' "$file" && echo "xcode26=True" >> "${GITHUB_OUTPUT}" || true
             grep -qls 'class Curl' "$file" && echo "curl=True" >> "${GITHUB_OUTPUT}" || true
             grep -qls 'depends_on.*openssl@4' "$file" && echo "openssl4=True" >> "${GITHUB_OUTPUT}" || true
-            grep -qls 'depends_on :macos' "$file" && echo "no_linux=True" >> "${GITHUB_OUTPUT}" || true
+            grep -qls 'depends_on :macos' "$file" && echo "no_linux=True" >> "${GITHUB_OUTPUT}" || echo "no_linux=False" >> "${GITHUB_OUTPUT}"
           done
 
   test-bot-mac:
