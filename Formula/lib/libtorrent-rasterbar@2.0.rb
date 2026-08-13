@@ -1,10 +1,11 @@
 class LibtorrentRasterbarAT20 < Formula
   desc "C++ bittorrent library with Python bindings"
   homepage "https://www.libtorrent.org/"
-  url "https://github.com/arvidn/libtorrent/releases/download/v2.0.13/libtorrent-rasterbar-2.0.13.tar.gz"
-  sha256 "892cb75c06318e2420de0faf9f63a908069d3d237676e2459fd30abe0cb3b1bf"
+  url "https://github.com/arvidn/libtorrent.git",
+      tag:      "v2.0.14",
+      revision: "aab2a10e2f60d9eac78e885a696736d043527794"
   license "BSD-3-Clause"
-  head "https://github.com/arvidn/libtorrent.git", branch: "RC_2_0"
+  head "https://github.com/arvidn/libtorrent.git", branch: "RC_2_1"
 
   livecheck do
     url :stable
@@ -37,11 +38,13 @@ class LibtorrentRasterbarAT20 < Formula
     inreplace "bindings/python/CMakeLists.txt", "${_PYTHON3_SITE_ARCH}", site_packages
 
     args = %W[
-      -DCMAKE_CXX_STANDARD=14
+      -DCMAKE_CXX_STANDARD=17
       -Dencryption=ON
       -Dpython-bindings=ON
       -Dpython-egg-info=ON
       -DCMAKE_INSTALL_RPATH=#{lib}
+      -DNO_EXAMPLES=ON
+      -DNO_TESTS=ON
     ]
 
     system "cmake", "-S", ".", "-B", "build", *std_cmake_args, *args
