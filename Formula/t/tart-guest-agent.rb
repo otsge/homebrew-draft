@@ -12,18 +12,18 @@ class TartGuestAgent < Formula
   end
 
   if OS.mac?
-    url "https://github.com/openai/tart-guest-agent/releases/download/v0.12.0/tart-guest-agent-darwin-all.tar.gz"
-    sha256 "a742e7a2398b541a7821f448c363221c97f32e902a2d6e2cb921d05c06abebf3"
+    url "https://github.com/openai/tart-guest-agent/releases/download/v0.14.0/tart-guest-agent-darwin-all.tar.gz"
+    sha256 "20ff5c88c9993df3d92664cd5e0eb57289c0ff06bc57171db8a14faa52596f6f"
   end
 
   if OS.linux? && Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-    url "https://github.com/openai/tart-guest-agent/releases/download/v0.12.0/tart-guest-agent-linux-amd64.tar.gz"
-    sha256 "51e63f5ae0ff32b4c41f440bb39a6c8268459c8f617a61bf34e25bd7de9a42ab"
+    url "https://github.com/openai/tart-guest-agent/releases/download/v0.14.0/tart-guest-agent-linux-amd64.tar.gz"
+    sha256 "58b59cdc5aa315d0b60f7f7f6e89749d718fe6e2a07cabc0d738fad8238ebd2e"
   end
 
   if OS.linux? && Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-    url "https://github.com/openai/tart-guest-agent/releases/download/v0.12.0/tart-guest-agent-linux-arm64.tar.gz"
-    sha256 "1d83c969c9a1c9d8ae9757ff7d26a0fc6d45d67b8e93c076cb916ccfd8929f33"
+    url "https://github.com/openai/tart-guest-agent/releases/download/v0.14.0/tart-guest-agent-linux-arm64.tar.gz"
+    sha256 "64248f18db2cd5e5aa3a4a5eaa7a6959c11a121c3b7f9911d2ee159f537ffe03"
   end
 
   def install
