@@ -4,8 +4,8 @@
 class Tart < Formula
   desc "Run macOS and Linux VMs on Apple Hardware"
   homepage "https://github.com/openai/tart"
-  url "https://github.com/openai/tart/releases/download/2.36.0/tart.tar.gz"
-  sha256 "c72a8ab8d78a6498a1e42688b1a1ec6c512ce46ca35a3a3be130c3de1440c7e8"
+  url "https://github.com/openai/tart/releases/download/2.37.0/tart.tar.gz"
+  sha256 "d531752c4dad5d4214ac7ff540cefc2647df1fca2338d413d3c01754f54b356b"
   license "FSL-1.1-ALv2"
 
   depends_on :macos
@@ -16,10 +16,7 @@ class Tart < Formula
 
   def install
     libexec.install Dir["*"]
-    bin.write_exec_script "#{libexec}/tart.app/Contents/MacOS/tart"
-  end
-
-  def post_install
+    bin.write_exec_script libexec/"tart.app/Contents/MacOS/tart"
     generate_completions_from_executable(libexec/"tart.app/Contents/MacOS/tart", "--generate-completion-script")
   end
 
