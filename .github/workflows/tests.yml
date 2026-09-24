@@ -162,6 +162,7 @@ jobs:
 
       - name: Base64-encode GITHUB_TOKEN for HOMEBREW_DOCKER_REGISTRY_TOKEN
         id: base64-encode
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -289,6 +290,7 @@ jobs:
           restore-keys: ${{ steps.setup-cache.outputs.prefix }}-rubygems-
 
       - name: Setup Homebrew test environment
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         run: |
           printf '\n<details><summary>brew test-bot --only-setup</summary>\n<p>\n\n' >> "$GITHUB_STEP_SUMMARY"
           printf '```\n' >> "${GITHUB_STEP_SUMMARY}"
@@ -302,6 +304,7 @@ jobs:
 
       - name: Base64-encode GITHUB_TOKEN for HOMEBREW_DOCKER_REGISTRY_TOKEN
         id: base64-encode
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

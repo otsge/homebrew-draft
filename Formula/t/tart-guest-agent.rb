@@ -6,24 +6,19 @@ class TartGuestAgent < Formula
   homepage "https://github.com/openai/tart-guest-agent"
   license "FSL-1.1-ALv2"
 
-  livecheck do
-    url :stable
-    strategy :github_latest
-  end
-
   if OS.mac?
-    url "https://github.com/openai/tart-guest-agent/releases/download/v0.14.1/tart-guest-agent-darwin-all.tar.gz"
-    sha256 "96596675452c8a4eed6f93c86a05b6a1e0c4bd2b0e381931b19ddeee3220eb23"
+    url "https://github.com/openai/tart-guest-agent/releases/download/v0.15.0/tart-guest-agent-darwin-all.tar.gz"
+    sha256 "eb47f402f18e742a8ea96344115ca776179f9c4c67494bc0c46a10a68db280b7"
   end
 
   if OS.linux? && Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-    url "https://github.com/openai/tart-guest-agent/releases/download/v0.14.1/tart-guest-agent-linux-amd64.tar.gz"
-    sha256 "936682a1a8eb72f919bbfdba37117cc3787da41725e74bc20568bde91aae9bcd"
+    url "https://github.com/openai/tart-guest-agent/releases/download/v0.15.0/tart-guest-agent-linux-amd64.tar.gz"
+    sha256 "11ebdc760a185528235b8a745aa174ce030f6af9f712bbc911f3e925fe650841"
   end
 
   if OS.linux? && Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-    url "https://github.com/openai/tart-guest-agent/releases/download/v0.14.1/tart-guest-agent-linux-arm64.tar.gz"
-    sha256 "20ec76c449c38c16e9e79c0fe4d6d31b09e145eceed63973d074de86b3aa6539"
+    url "https://github.com/openai/tart-guest-agent/releases/download/v0.15.0/tart-guest-agent-linux-arm64.tar.gz"
+    sha256 "ec9d6111137f8a1e3c51b0df91fa7aaab9bb1af5fa155a370a8fc17f03c624e3"
   end
 
   def install
