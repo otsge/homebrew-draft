@@ -28,6 +28,8 @@ class Libngtcp2 < Formula
   depends_on "pkgconf" => :build
   depends_on "openssl@4"
 
+  deny_network_access!
+
   def install
     system "autoreconf", "-fiv" if build.head?
     system "./configure", "--disable-silent-rules", *std_configure_args
