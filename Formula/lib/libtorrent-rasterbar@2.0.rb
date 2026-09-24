@@ -31,10 +31,12 @@ class LibtorrentRasterbarAT20 < Formula
   depends_on "openssl@3"
   depends_on "python@3.14"
 
+  deny_network_access!
+
   def install
     # Work around Homebrew's prefix scheme, which makes Python's reported
     # site-packages path absolute and outside the keg.
-    site_packages = prefix/Language::Python.site_packages("python3.14")
+    site_packages = prefix/Language::Python.site_packages("python3")
     inreplace "bindings/python/CMakeLists.txt", "${_PYTHON3_SITE_ARCH}", site_packages
 
     args = %W[
