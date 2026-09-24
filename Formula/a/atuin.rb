@@ -7,6 +7,7 @@ class Atuin < Formula
     url "https://github.com/atuinsh/atuin/releases/download/v18.23.0/source.tar.gz"
     sha256 "64b4b9b0f84ef34bcfa88e992d38cc0b95d3cf1f6d470bb695d3ef0231445b26"
 
+    # Readd dotfile feature
     patch do
       url "https://www.surge.box.ca/files/atuin-readd-dotfiles-v18.23.0.patch"
       sha256 "297029f2bee225e887e2456d492a421c4a2b7f7e96b1f20ac7892971b0424fd8"
@@ -25,9 +26,10 @@ class Atuin < Formula
   head do
     url "https://github.com/atuinsh/atuin.git", branch: "main"
 
+    # Readd dotfile feature
     patch do
       url "https://www.surge.box.ca/files/atuin-readd-dotfiles.patch"
-      sha256 "5888e3f4c649997d2eaba90258ef2f0a7cf9537a1c14ad65cd7022e976ea3f4f"
+      sha256 "db84a658128833033be795c2de1b2cabe81d168461809adb7cf134066e3c4862"
       type :unofficial
     end
   end
@@ -39,8 +41,6 @@ class Atuin < Formula
   on_linux do
     depends_on "openssl@4"
   end
-
-  # Readd dotfile feature
 
   deny_network_access!
 
