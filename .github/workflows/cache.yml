@@ -35,16 +35,18 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-14
-            name: macos 14-arm64
+          # - os: macos-14
+          #   name: macos 14-arm64
           - os: macos-15
             name: macOS 15-arm64
-          - os: macos-15-intel
-            name: macOS 15-x86_64
+          # - os: macos-15-intel
+          #   name: macOS 15-x86_64
           - os: macos-26
             name: macOS 26-arm64
-          - os: macos-26-intel
-            name: macOS 26-x86_64
+          # - os: macos-26-intel
+          #   name: macOS 26-x86_64
+          - os: xcode-27
+            name: macOS 27-arm64
           - os: ubuntu-24.04
             name: Linux x86_64
             container: ghcr.io/homebrew/ubuntu24.04:main

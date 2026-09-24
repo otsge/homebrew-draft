@@ -9,7 +9,7 @@ env:
   HOMEBREW_DEVELOPER: 1
   HOMEBREW_NO_ANALYTICS: 1
   BOTTLE_BRANCH: ${{ github.event.pull_request.head.ref }}
-  BOTTLES_DIR: ${{ github.workspace }}/bottles
+  # BOTTLES_DIR: ${{ github.workspace }}/bottles
 
 defaults:
   run:
@@ -38,40 +38,35 @@ jobs:
           cask: false
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get the run ID of the tests workflow
-        id: get-run-id
-        env:
-          GH_TOKEN: ${{ secrets.AUTOBUMP_TOKEN }}
-        run: |
-          runid=$(gh run list --branch "$BOTTLE_BRANCH" --workflow tests.yml --limit 1 --json databaseId --jq '.[].databaseId')
-          echo "run-id=${runid}" >> "${GITHUB_OUTPUT}"
+      # - name: Get the run ID of the tests workflow
+      #   id: get-run-id
+      #   env:
+      #     GH_TOKEN: ${{ secrets.AUTOBUMP_TOKEN }}
+      #   run: |
+      #     runid=$(gh run list --branch "$BOTTLE_BRANCH" --workflow tests.yml --limit 1 --json databaseId --jq '.[].databaseId')
+      #     echo "run-id=${runid}" >> "${GITHUB_OUTPUT}"
 
-      - name: Download bottles from GitHub Actions
-        uses: actions/download-artifact@main
-        with:
-          pattern: bottles_*
-          path: ${{ env.BOTTLES_DIR }}
-          merge-multiple: true
-          github-token: ${{ secrets.AUTOBUMP_TOKEN }}
-          run-id: ${{ steps.get-run-id.outputs.run-id }}
+      # - name: Download bottles from GitHub Actions
+      #   uses: actions/download-artifact@main
+      #   with:
+      #     pattern: bottles_*
+      #     path: ${{ env.BOTTLES_DIR }}
+      #     merge-multiple: true
+      #     github-token: ${{ secrets.AUTOBUMP_TOKEN }}
+      #     run-id: ${{ steps.get-run-id.outputs.run-id }}
 
       - name: Configure Git user
-        id: git-user-config
+        id: git_setup
         uses: Homebrew/actions/git-user-config@main
         with:
           username: ${{ github.repository_owner }}
 
-      - name: Generate build provenance
-        id: attestation
-        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
-        uses: actions/attest@main
-        with:
-          subject-path: ${{ env.BOTTLES_DIR }}/*.tar.gz
-
       - name: Pull bottles
-        id: pr-pull
+        id: pull_bottles
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_GIT_COMMITTER_NAME: ${{ steps.git_setup.outputs.name }}
+          HOMEBREW_GIT_COMMITTER_EMAIL: ${{ steps.git_setup.outputs.email }}
           HOMEBREW_GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_GITHUB_PACKAGES_USER: ${{ github.repository_owner }}
           PULL_REQUEST: ${{ github.event.pull_request.number }}
@@ -81,7 +76,15 @@ jobs:
             sudo mkdir -p /etc/containers
             sudo curl -sSL -o /etc/containers/policy.json https://raw.githubusercontent.com/podman-container-tools/skopeo/refs/heads/main/default-policy.json
           fi
-          brew pr-pull --verbose --tap="$GITHUB_REPOSITORY" "$PULL_REQUEST"
+          brew pr-pull --debug --retain-bottle-dir --tap="$GITHUB_REPOSITORY" "$PULL_REQUEST"
+
+      - name: Generate build provenance
+        id: attestation
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+        uses: actions/attest@main
+        with:
+        #   subject-path: ${{ env.BOTTLES_DIR }}/*.tar.gz
+          subject-path: "${{ steps.pull_bottles.outputs.bottle_path }}/*.tar.gz"
 
       - name: Push commits
         uses: Homebrew/actions/git-try-push@main

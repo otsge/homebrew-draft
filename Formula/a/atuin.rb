@@ -14,6 +14,14 @@ class Atuin < Formula
     end
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/otsge/draft"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "de90b149bdb2b3d8fe67c1539c57157693eab34be24579e86563642d49494048"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "e038e03380d380b6077af9ca4684455a6a24ecd1085f91cdfdf23696a5f3a26b"
+    sha256 cellar: :any,                 arm64_linux:   "9eaa3c9c0da25303e28b1493cccd4999c2461fbafe6239a21e00b1baaf02aaae"
+    sha256 cellar: :any,                 x86_64_linux:  "3554570866f47a3dc4cc98b646a7d58ccb206a9e90b2e5e11a2748753f2010d3"
+  end
+
   head do
     url "https://github.com/atuinsh/atuin.git", branch: "main"
 

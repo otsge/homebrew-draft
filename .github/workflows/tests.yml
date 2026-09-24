@@ -86,7 +86,8 @@ jobs:
     continue-on-error: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'CI-no-fail-fast-syntax') }}
     strategy:
       matrix:
-        os: [ macos-14, macos-15, macos-15-intel, macos-26, macos-26-intel ]
+      #   os: [ macos-14, macos-15, macos-15-intel, macos-26, macos-26-intel ]
+        os: [ macos-15, macos-26, xcode-27 ]
     runs-on: ${{ matrix.os }}
     permissions:
       actions: read
@@ -205,22 +206,22 @@ jobs:
             sed -i '' 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
             sed -i '' 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
           fi
-          if [[ "${{ runner.arch }}" == "X64" ]]
-          then
-            cp /Users/runner/work/homebrew-draft/homebrew-draft/.github/workflows/files/tb_formulae "$(brew --prefix)"/Homebrew/Library/Homebrew/test_bot/formulae.rb
-          fi
+          # if [[ "${{ runner.arch }}" == "X64" ]]
+          # then
+          #   cp /Users/runner/work/homebrew-draft/homebrew-draft/.github/workflows/files/tb_formulae "$(brew --prefix)"/Homebrew/Library/Homebrew/test_bot/formulae.rb
+          # fi
           if [[ "${XCODE_26}" == "TRUE" && "${MACOS_VERSION}" == "15" && "${{runner.arch }}" == "ARM64" ]]
           then
             brew install xcodes
             xcodes install --latest --select
           fi
-          pushd "$(brew --repository)"
-          s="$(git status --porcelain)"
-          if [[ -n "$s" ]]
-          then
-            git add . && git commit --amend --no-edit
-          fi
-          popd
+          # pushd "$(brew --repository)"
+          # s="$(git status --porcelain)"
+          # if [[ -n "$s" ]]
+          # then
+          #   git add . && git commit --amend --no-edit
+          # fi
+          # popd
           brew test-bot --only-formulae --skip-online-checks --skip-dependents --root-url=https://ghcr.io/v2/otsge/draft
 
       - name: Post-build steps
