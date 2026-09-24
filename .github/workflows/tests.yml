@@ -73,11 +73,11 @@ jobs:
         run: |
           echo "${ALL_CHANGED_FILES}"
           for file in ${ALL_CHANGED_FILES}; do
-            grep -qls 'fuse' "$file" && echo "fuse=True" >> "${GITHUB_OUTPUT}" || true
+            grep -qls 'libfuse' "$file" && echo "fuse=True" >> "${GITHUB_OUTPUT}" || true
             grep -qls 'xcode: \["26.0"' "$file" && echo "xcode26=True" >> "${GITHUB_OUTPUT}" || true
             grep -qls 'class Curl' "$file" && echo "curl=True" >> "${GITHUB_OUTPUT}" || true
             grep -qls 'depends_on.*openssl@4' "$file" && echo "openssl4=True" >> "${GITHUB_OUTPUT}" || true
-            grep -qls 'depends_on :macos' "$file" && echo "no_linux=True" >> "${GITHUB_OUTPUT}" || echo "no_linux=False" >> "${GITHUB_OUTPUT}"
+            grep -qls 'depends_on :macos' "$file" || echo "no_linux=False" >> "${GITHUB_OUTPUT}"
           done
 
   test-bot-mac:
@@ -107,7 +107,7 @@ jobs:
         uses: Homebrew/actions/setup-homebrew@main
         with:
           core: true
-          cask: false
+          cask: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cleanup runner
@@ -156,9 +156,13 @@ jobs:
       - name: Install FUSE-T
         if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') && needs.changed_files.outputs.fuse-files == 'True' }}
         run: |
-          brew tap otsge/keg
+          brew install --verbose --cask fuse-t
           brew trust otsge/keg
-          brew install --cask otsge/keg/fuse-t
+          brew tap otsge/keg
+          pushd "$(brew --repo otsge/keg)"
+          sudo cmd/brew-fuse-t-links-add
+          popd
+          brew untap homebrew/cask
 
       - name: Base64-encode GITHUB_TOKEN for HOMEBREW_DOCKER_REGISTRY_TOKEN
         id: base64-encode
@@ -197,6 +201,7 @@ jobs:
         run:  |
           if [[ "${OPENSSL_4}" == "TRUE" ]]
           then
+            export HOMEBREW_NO_INSTALL_FROM_API=1
             sed -i '' 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
             sed -i '' 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
           fi
@@ -235,11 +240,15 @@ jobs:
       matrix:
         include:
           - os: ubuntu-24.04
-            container: ghcr.io/homebrew/ubuntu24.04:main
+            container:
+              image: ghcr.io/homebrew/ubuntu24.04:main
+              options: --privileged
           - os: ubuntu-24.04-arm
-            container: ghcr.io/homebrew/ubuntu24.04:main
+            container:
+              image: ghcr.io/homebrew/ubuntu24.04:main
+              options: --privileged
     runs-on: ${{ matrix.os }}
-    container: ${{ matrix.container }}
+    container: ${{ fromJSON(toJSON(matrix.container)) }}
     permissions:
       actions: read
       checks: read
@@ -336,20 +345,15 @@ jobs:
         run:  |
           if [[ "${IS_CURL}" == "TRUE" ]]
           then
+            export HOMEBREW_NO_INSTALL_FROM_API=1
             sed -i 's!uses_from_macos "curl"!# uses_from_macos "curl"!g' "$(brew --repository homebrew/core)"/Formula/r/rust.rb
           fi
           if [[ "${OPENSSL_4}" == "TRUE" ]]
           then
+            export HOMEBREW_NO_INSTALL_FROM_API=1
             sed -i 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
             sed -i 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
           fi
-          # pushd "$(brew --repository)"
-          # s="$(git status --porcelain)"
-          # if [[ -n "$s" ]]
-          # then
-          #   git add . && git commit --amend --no-edit
-          # fi
-          # popd
           brew test-bot --only-formulae --skip-online-checks --skip-dependents --root-url=https://ghcr.io/v2/otsge/draft
 
       - name: Post-build steps
@@ -375,7 +379,7 @@ jobs:
 
   label-pr-mac:
     needs: [changed_files, test-bot-mac]
-    if: ${{ github.event_name == 'pull_request' && needs.changed_files.outputs.no-linux == 'True' }}
+    if: ${{ github.event_name == 'pull_request' && needs.changed_files.outputs.no-linux != 'False' }}
     runs-on: ubuntu-slim
     steps:
       - name: Label the Pull Request
