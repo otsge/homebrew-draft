@@ -14,14 +14,12 @@ class Libssh2 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/otsge/draft"
-    rebuild 2
-    sha256 cellar: :any, arm64_tahoe:   "b6165ead2ab71d2b5bf7307ba1c3ff744caa318a1de72ece6a6b804138d96ebe"
-    sha256 cellar: :any, arm64_sequoia: "706f4cd66901e96a8b0166d7486de28bb6d304e59b413ecb3e525b068e6348f2"
-    sha256 cellar: :any, arm64_sonoma:  "07d3ab576f080af4f361f701b61ef7e65b8a0867af44af758281090b7c21fda3"
-    sha256 cellar: :any, tahoe:         "d688b0068561220da92a6c43a213343a1ef0773161a526512716a4c2771b42e8"
-    sha256 cellar: :any, sequoia:       "2eb4e61c78e70ed2a1665706eb6462ac7ab02a231ec7149f84d8d346755f149d"
-    sha256 cellar: :any, arm64_linux:   "6ff481f0d25a05ecac62f024a1e42bef6c4e04119c5feb6727418aeb510f6811"
-    sha256 cellar: :any, x86_64_linux:  "251bb99e6cddc292fd10556ffc05793f9a81664cb0859f186e16709f2333ff35"
+    rebuild 3
+    sha256 cellar: :any, arm64_golden_gate: "0b3ced12ab3742b005c872d4ffd1b127bdd3ada71403556711c2c8207b8c0e14"
+    sha256 cellar: :any, arm64_tahoe:       "8cce5274a72e725404bf84c7374809966475092f06cdbd2806030d7c8f92c5be"
+    sha256 cellar: :any, arm64_sequoia:     "3d8ba0e53008272dc9d40fd3c16f38067107cdda84841d4f200bd770f762d029"
+    sha256 cellar: :any, arm64_linux:       "621b5d9d4c0e2d627debf8ac22de8b8fd30351ec4ffc9ad21f01c0a6c1875b58"
+    sha256 cellar: :any, x86_64_linux:      "f7280e30489724b2fa2769c41c4a507be6a24e393437e0b1e23d7ad7147302fc"
   end
 
   head do
