@@ -2,8 +2,8 @@ class LibtorrentRasterbarAT20 < Formula
   desc "C++ bittorrent library with Python bindings"
   homepage "https://www.libtorrent.org/"
   url "https://github.com/arvidn/libtorrent.git",
-      tag:      "v2.0.14",
-      revision: "aab2a10e2f60d9eac78e885a696736d043527794"
+      tag:      "v2.0.15",
+      revision: "1eb18faeae156d8dbbab42935c082f8b81f50989"
   license "BSD-3-Clause"
   head "https://github.com/arvidn/libtorrent.git", branch: "RC_2_1"
 
