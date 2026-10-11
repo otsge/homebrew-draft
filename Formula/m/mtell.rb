@@ -25,8 +25,7 @@ class Mtell < Formula
 
   def install
     bin.install "mtell"
-    generate_completions_from_executable(bin/"mtell", "completion",
-                                         shells: [:bash, :zsh, :fish, :pwsh])
+    generate_completions_from_executable(bin/"mtell", shell_parameter_format: :cobra)
   end
 
   def caveats
