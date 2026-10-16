@@ -197,15 +197,15 @@ jobs:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
           IS_CURL: ${{ (needs.changed_files.outputs.curl-files && 'TRUE') || 'FALSE' }}
           MACOS_VERSION: ${{ steps.setup-cache.outputs.macos_version }}
-          OPENSSL_4: ${{ (needs.changed_files.outputs.openssl4-files && 'TRUE') || 'FALSE' }}
+        #   OPENSSL_4: ${{ (needs.changed_files.outputs.openssl4-files && 'TRUE') || 'FALSE' }}
           XCODE_26: ${{ (needs.changed_files.outputs.xcode26-files && 'TRUE') || 'FALSE' }}
         run:  |
-          if [[ "${OPENSSL_4}" == "TRUE" ]]
-          then
-            export HOMEBREW_NO_INSTALL_FROM_API=1
-            sed -i '' 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
-            sed -i '' 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
-          fi
+          # if [[ "${OPENSSL_4}" == "TRUE" ]]
+          # then
+          #   export HOMEBREW_NO_INSTALL_FROM_API=1
+          #   sed -i '' 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
+          #   sed -i '' 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
+          # fi
           # if [[ "${{ runner.arch }}" == "X64" ]]
           # then
           #   cp /Users/runner/work/homebrew-draft/homebrew-draft/.github/workflows/files/tb_formulae "$(brew --prefix)"/Homebrew/Library/Homebrew/test_bot/formulae.rb
@@ -342,19 +342,19 @@ jobs:
         env:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
           IS_CURL: ${{ (needs.changed_files.outputs.curl-files && 'TRUE') || 'FALSE' }}
-          OPENSSL_4: ${{ (needs.changed_files.outputs.openssl4-files && 'TRUE') || 'FALSE' }}
+        #   OPENSSL_4: ${{ (needs.changed_files.outputs.openssl4-files && 'TRUE') || 'FALSE' }}
         run:  |
           if [[ "${IS_CURL}" == "TRUE" ]]
           then
             export HOMEBREW_NO_INSTALL_FROM_API=1
             sed -i 's!uses_from_macos "curl"!# uses_from_macos "curl"!g' "$(brew --repository homebrew/core)"/Formula/r/rust.rb
           fi
-          if [[ "${OPENSSL_4}" == "TRUE" ]]
-          then
-            export HOMEBREW_NO_INSTALL_FROM_API=1
-            sed -i 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
-            sed -i 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
-          fi
+          # if [[ "${OPENSSL_4}" == "TRUE" ]]
+          # then
+          #   export HOMEBREW_NO_INSTALL_FROM_API=1
+          #   sed -i 's#depends_on "libssh2"#depends_on "otsge/draft/libssh2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
+          #   sed -i 's#depends_on "libngtcp2"#depends_on "otsge/draft/libngtcp2"#g' "$(brew --repository homebrew/core)"/Formula/*/*.rb
+          # fi
           brew test-bot --only-formulae --skip-online-checks --skip-dependents --root-url=https://ghcr.io/v2/otsge/draft
 
       - name: Post-build steps
