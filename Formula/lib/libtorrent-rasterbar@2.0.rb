@@ -26,8 +26,8 @@ class LibtorrentRasterbarAT20 < Formula
   depends_on "python-setuptools" => :build
   depends_on "boost"
   depends_on "boost-python3"
-  depends_on "openssl@3"
-  depends_on "python@3.14"
+  depends_on "openssl@4"
+  depends_on "python@3.15"
 
   deny_network_access!
 
@@ -77,6 +77,6 @@ class LibtorrentRasterbarAT20 < Formula
     system "./test", test_fixtures("test.mp3"), "-o", "test.torrent"
     assert_path_exists testpath/"test.torrent"
 
-    system "python3.14", "-c", "import libtorrent"
+    system "python3.15", "-c", "import libtorrent"
   end
 end
