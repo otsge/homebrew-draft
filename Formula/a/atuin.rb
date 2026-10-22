@@ -4,13 +4,13 @@ class Atuin < Formula
   license "MIT"
 
   stable do
-    url "https://github.com/atuinsh/atuin/releases/download/v18.24.1/source.tar.gz"
-    sha256 "0647e8823460745a713d0f7744c0c01b773352a482b450e6dfc1fac7eb3a2d91"
+    url "https://github.com/atuinsh/atuin/releases/download/v18.24.2/source.tar.gz"
+    sha256 "1b52539da5d55962dc284fa10a78cf5dccc2961fd32af6812bf3d5969f632d9e"
 
     # Readd dotfile feature
     patch do
-      url "https://www.surge.box.ca/files/atuin-readd-dotfiles-v18.24.1.patch"
-      sha256 "a696ae2ad863fa1d90453c9a07dbe75f5874887b78ea70d02ea9b3e9cfcafd02"
+      url "https://www.surge.box.ca/files/atuin-readd-dotfiles-v18.24.2.patch"
+      sha256 "4c1f67a871c481b137f5ff0ee0e3eb0197a5c1ea456fbda5ca2ae961f81a75c0"
       type :unofficial
     end
   end
