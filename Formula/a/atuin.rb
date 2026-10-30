@@ -4,8 +4,8 @@ class Atuin < Formula
   license "MIT"
 
   stable do
-    url "https://github.com/atuinsh/atuin/releases/download/v18.24.3/source.tar.gz"
-    sha256 "e132fedfe6ca8096f04a85887b93b029f2a2edbe1690bc713d02d9b8c846834d"
+    url "https://github.com/atuinsh/atuin/releases/download/v18.24.4/source.tar.gz"
+    sha256 "4106e8841321b8702497b2e84075706b7b14ddcf9401d4e638b338dc555e1fce"
 
     # Readd dotfile feature
     patch do
