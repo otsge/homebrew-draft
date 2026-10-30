@@ -9,7 +9,7 @@ class Atuin < Formula
 
     # Readd dotfile feature
     patch do
-      url "https://www.surge.box.ca/files/atuin-readd-dotfiles-v18.24.3.patch"
+      url "https://www.surge.box.ca/files/atuin-readd-dotfiles-stable.patch"
       sha256 "3c2ecaba10e0775bb51b9c4294dc320d48f15ae20a87b2200a91db6de64e5635"
       type :unofficial
     end
@@ -17,11 +17,11 @@ class Atuin < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/otsge/draft"
-    sha256 cellar: :any_skip_relocation, arm64_golden_gate: "890cfb30f8a9536a5f6a7ee9decdf571cbd6ab54be170ae1901ad5ac393ddd69"
-    sha256 cellar: :any_skip_relocation, arm64_tahoe:       "acc51ae8b397dc568d917dcbfb4985c7130aeb4066150163d4fbbda097a8d6ba"
-    sha256 cellar: :any_skip_relocation, arm64_sequoia:     "29b95883e0aa1a700e56f9ee1ffcc26e7019fefaac4471b91d0d6b32408971ba"
-    sha256 cellar: :any,                 arm64_linux:       "f2e39646a838bca8b159ad719af6f56bca016c055be56c688da8978af0bfdedd"
-    sha256 cellar: :any,                 x86_64_linux:      "661ff5b41ce353ee36e74a6e7f6833da528bc0627906c9cad3679875fb0936c0"
+    sha256 cellar: :any_skip_relocation, arm64_golden_gate: "8967be1184c068de495847073178c6de4bed9fa5f1b839fe10524d08c06fccc0"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:       "36544867c0744e5da9027243138c8795683782c0af2fe4bf88fa473854d61245"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia:     "1e5a24c3ebe4d97fd9091aad864b8c826e3cff9670b62d43343e5e23c02050ac"
+    sha256 cellar: :any,                 arm64_linux:       "527f59b013bf19fe000956fee055826d2d3c89a64dde9cf445eafde5247d2c72"
+    sha256 cellar: :any,                 x86_64_linux:      "173f50db61c64734a223c31831cba1b34d25f93504e592d41ce54c614e5ca54e"
   end
 
   head do
@@ -29,8 +29,8 @@ class Atuin < Formula
 
     # Readd dotfile feature
     patch do
-      url "https://www.surge.box.ca/files/atuin-readd-dotfiles.patch"
-      sha256 "db84a658128833033be795c2de1b2cabe81d168461809adb7cf134066e3c4862"
+      url "https://www.surge.box.ca/files/atuin-readd-dotfiles-head.patch"
+      sha256 "3c2ecaba10e0775bb51b9c4294dc320d48f15ae20a87b2200a91db6de64e5635"
       type :unofficial
     end
   end
