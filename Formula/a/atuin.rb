@@ -30,7 +30,7 @@ class Atuin < Formula
     # Readd dotfile feature
     patch do
       url "https://www.surge.box.ca/files/atuin-readd-dotfiles-head.patch"
-      sha256 "3c2ecaba10e0775bb51b9c4294dc320d48f15ae20a87b2200a91db6de64e5635"
+      sha256 "0ec016229b1d6481ed96ea452bab9e060c9c4f92ac5eac3b3c236d0c9d7be92b"
       type :unofficial
     end
   end
