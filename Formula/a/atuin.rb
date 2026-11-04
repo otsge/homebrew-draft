@@ -17,11 +17,11 @@ class Atuin < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/otsge/draft"
-    sha256 cellar: :any_skip_relocation, arm64_golden_gate: "8967be1184c068de495847073178c6de4bed9fa5f1b839fe10524d08c06fccc0"
-    sha256 cellar: :any_skip_relocation, arm64_tahoe:       "36544867c0744e5da9027243138c8795683782c0af2fe4bf88fa473854d61245"
-    sha256 cellar: :any_skip_relocation, arm64_sequoia:     "1e5a24c3ebe4d97fd9091aad864b8c826e3cff9670b62d43343e5e23c02050ac"
-    sha256 cellar: :any,                 arm64_linux:       "527f59b013bf19fe000956fee055826d2d3c89a64dde9cf445eafde5247d2c72"
-    sha256 cellar: :any,                 x86_64_linux:      "173f50db61c64734a223c31831cba1b34d25f93504e592d41ce54c614e5ca54e"
+    sha256 cellar: :any_skip_relocation, arm64_golden_gate: "9902b003682f249513e18ff935a2d4b532834c4c068000f2c22afe3b36f3a04f"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:       "c5ec7799ecac70547cd1754b4a93df4c4d050ec0c5f760b7d707174dd32fe4b0"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia:     "3bb5fd88d52035c850e8c1359f1436ae8d18682011973346f40175bf2cf4ce3d"
+    sha256 cellar: :any,                 arm64_linux:       "8399a3b0a1c9dfd5c78bdba378c73560fc244da111e80143b4d88de10daf06ee"
+    sha256 cellar: :any,                 x86_64_linux:      "8c9e48f8d52c0f85c29f6cadbca19eae89ce68c04905ba6e0e613bb2782b6279"
   end
 
   head do
