@@ -18,7 +18,8 @@ defaults:
 jobs:
   publish:
     if: contains(github.event.pull_request.labels.*.name, 'pr-pull')
-    runs-on: macos-26
+    # runs-on: macos-26
+    runs-on: ubuntu-latest
     permissions:
       actions: read
       checks: read
@@ -71,11 +72,11 @@ jobs:
           HOMEBREW_GITHUB_PACKAGES_USER: ${{ github.repository_owner }}
           PULL_REQUEST: ${{ github.event.pull_request.number }}
         run: |
-          if [ ! -e "/etc/containers" ]
-          then
-            sudo mkdir -p /etc/containers
-            sudo curl -sSL -o /etc/containers/policy.json https://raw.githubusercontent.com/podman-container-tools/skopeo/refs/heads/main/default-policy.json
-          fi
+          # if [ ! -e "/etc/containers" ]
+          # then
+          #   sudo mkdir -p /etc/containers
+          #   sudo curl -sSL -o /etc/containers/policy.json https://raw.githubusercontent.com/podman-container-tools/skopeo/refs/heads/main/default-policy.json
+          # fi
           brew pr-pull --debug --retain-bottle-dir --tap="$GITHUB_REPOSITORY" "$PULL_REQUEST"
 
       - name: Generate build provenance
