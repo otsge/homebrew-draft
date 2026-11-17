@@ -17,7 +17,7 @@ env:
   HOMEBREW_GITHUB_ACTIONS: 1
   HOMEBREW_NO_ANALYTICS: 1
   HOMEBREW_NO_AUTO_UPDATE: 1
-  HOMEBREW_NO_INSTALL_FROM_API: 1
+  # HOMEBREW_NO_INSTALL_FROM_API: 1
   HOMEBREW_ENFORCE_SBOM: 1
   GH_REPO: ${{ github.repository }}
   GH_NO_UPDATE_NOTIFIER: 1
@@ -77,7 +77,7 @@ jobs:
             grep -qls 'xcode: \["26.0"' "$file" && echo "xcode26=True" >> "${GITHUB_OUTPUT}" || true
             grep -qls 'class Curl' "$file" && echo "curl=True" >> "${GITHUB_OUTPUT}" || true
             grep -qls 'depends_on.*openssl@4' "$file" && echo "openssl4=True" >> "${GITHUB_OUTPUT}" || true
-            grep -qls 'depends_on :macos' "$file" || echo "no_linux=False" >> "${GITHUB_OUTPUT}"
+            grep -qls 'depends_on.*macos' "$file" || echo "no_linux=False" >> "${GITHUB_OUTPUT}"
           done
 
   test-bot-mac:
@@ -107,39 +107,41 @@ jobs:
         if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         uses: Homebrew/actions/setup-homebrew@main
         with:
-          core: true
-          cask: true
+          # core: true
+          # cask: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cleanup runner
         if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         run: brew test-bot --only-cleanup-before
 
-      - name: Get cache key
-        id: setup-cache
-        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
-        run: |
-          cache_key_prefix="${RUNNER_OS}"
-          if [ "${RUNNER_OS}" == "macOS" ]
-          then
-            macos_full_version="$(sw_vers -productVersion)"
-            macos_version="${macos_full_version%%.*}"
-            arch="$(uname -m)"
-            cache_key_prefix="${macos_version}-${arch}"
-          fi
-          {
-          echo "prefix=${cache_key_prefix}"
-          echo "macos_version=${macos_version:-}"
-          echo "arch=${arch:-}"
-          } >> "${GITHUB_OUTPUT}"
+      # - name: Get cache key
+      #   id: setup-cache
+      #   if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+      #   run: |
+      #     cache_key_prefix="${RUNNER_OS}"
+      #     if [ "${RUNNER_OS}" == "macOS" ]
+      #     then
+      #       macos_full_version="$(sw_vers -productVersion)"
+      #       macos_version="${macos_full_version%%.*}"
+      #       arch="$(uname -m)"
+      #       cache_key_prefix="${macos_version}-${arch}"
+      #     fi
+      #     {
+      #     echo "prefix=${cache_key_prefix}"
+      #     echo "macos_version=${macos_version:-}"
+      #     echo "arch=${arch:-}"
+      #     } >> "${GITHUB_OUTPUT}"
 
       - name: Cache Homebrew Bundler RubyGems
         if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         uses: actions/cache@main
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
-          key: ${{ steps.setup-cache.outputs.prefix }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
-          restore-keys: ${{ steps.setup-cache.outputs.prefix }}-rubygems-
+          key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ matrix.os }}-rubygems-
+          # key: ${{ steps.setup-cache.outputs.prefix }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          # restore-keys: ${{ steps.setup-cache.outputs.prefix }}-rubygems-
 
       - name: Setup Homebrew test environment
         if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
@@ -163,7 +165,7 @@ jobs:
           pushd "$(brew --repo otsge/keg)"
           sudo cmd/brew-fuse-t-links-add
           popd
-          brew untap homebrew/cask
+          [[ -d "$(brew --repository homebrew/cask)" ]] && brew untap homebrew/cask
 
       - name: Base64-encode GITHUB_TOKEN for HOMEBREW_DOCKER_REGISTRY_TOKEN
         id: base64-encode
@@ -182,12 +184,13 @@ jobs:
           rm -rvf "${BOTTLES_DIR:?}"
           mkdir "${BOTTLES_DIR:?}"
 
-          bottle_specifier="{macos-${MACOS_VERSION},${MACOS_VERSION}-${ARCH}}"
+          bottle_specifier="{${MACOS_VERSION},${MACOS_VERSION}-${{ runner.arch }}}"
 
           echo "bottle_specifier=$bottle_specifier" >> "$GITHUB_OUTPUT"
         env:
-          MACOS_VERSION: ${{ steps.setup-cache.outputs.macos_version }}
-          ARCH: ${{ steps.setup-cache.outputs.arch }}
+          MACOS_VERSION: ${{ matrix.os }}
+          # MACOS_VERSION: ${{ steps.setup-cache.outputs.macos_version }}
+          # ARCH: ${{ steps.setup-cache.outputs.arch }}
 
       - name: Build bottle for ${{ matrix.os }}
         id: build-bottle
@@ -196,7 +199,7 @@ jobs:
         env:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
           IS_CURL: ${{ (needs.changed_files.outputs.curl-files && 'TRUE') || 'FALSE' }}
-          MACOS_VERSION: ${{ steps.setup-cache.outputs.macos_version }}
+        #   MACOS_VERSION: ${{ steps.setup-cache.outputs.macos_version }}
         #   OPENSSL_4: ${{ (needs.changed_files.outputs.openssl4-files && 'TRUE') || 'FALSE' }}
           XCODE_26: ${{ (needs.changed_files.outputs.xcode26-files && 'TRUE') || 'FALSE' }}
         run:  |
@@ -213,7 +216,8 @@ jobs:
           if [[ "${XCODE_26}" == "TRUE" && "${MACOS_VERSION}" == "15" && "${{runner.arch }}" == "ARM64" ]]
           then
             brew install xcodes
-            xcodes install --latest --select
+            # xcodes install --latest --select
+            xcodes select /Applications/Xcode_26.3.app
           fi
           # pushd "$(brew --repository)"
           # s="$(git status --porcelain)"
@@ -240,13 +244,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-24.04
+          - os: ubuntu-26.04
             container:
-              image: ghcr.io/homebrew/ubuntu24.04:main
+              image: ghcr.io/homebrew/ubuntu26.04:main
               options: --privileged
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             container:
-              image: ghcr.io/homebrew/ubuntu24.04:main
+              image: ghcr.io/homebrew/ubuntu26.04:main
               options: --privileged
     runs-on: ${{ matrix.os }}
     container: ${{ fromJSON(toJSON(matrix.container)) }}
@@ -276,28 +280,30 @@ jobs:
         if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         run: brew test-bot --only-cleanup-before
 
-      - name: Get cache key
-        if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
-        id: setup-cache
-        run: |
-          cache_key_prefix="${RUNNER_OS}"
-          if [ "${RUNNER_OS}" == "Linux" ]
-          then
-            arch="$(uname -m)"
-            cache_key_prefix="Linux-${arch}"
-          fi
-          {
-          echo "prefix=${cache_key_prefix}"
-          echo "arch=${arch:-}"
-          } >> "${GITHUB_OUTPUT}"
+      # - name: Get cache key
+      #   if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
+      #   id: setup-cache
+      #   run: |
+      #     cache_key_prefix="${RUNNER_OS}"
+      #     if [ "${RUNNER_OS}" == "Linux" ]
+      #     then
+      #       arch="$(uname -m)"
+      #       cache_key_prefix="Linux-${arch}"
+      #     fi
+      #     {
+      #     echo "prefix=${cache_key_prefix}"
+      #     echo "arch=${arch:-}"
+      #     } >> "${GITHUB_OUTPUT}"
 
       - name: Cache Homebrew Bundler RubyGems
         if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
         uses: actions/cache@main
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
-          key: ${{ steps.setup-cache.outputs.prefix }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
-          restore-keys: ${{ steps.setup-cache.outputs.prefix }}-rubygems-
+          key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ matrix.os }}-rubygems-
+          # key: ${{ steps.setup-cache.outputs.prefix }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          # restore-keys: ${{ steps.setup-cache.outputs.prefix }}-rubygems-
 
       - name: Setup Homebrew test environment
         if: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-bottles') }}
@@ -329,11 +335,12 @@ jobs:
           rm -rvf "${BOTTLES_DIR:?}"
           mkdir "${BOTTLES_DIR:?}"
 
-          bottle_specifier="{ubuntu,linux}"
+          bottle_specifier="{${{ matrix.os }},linux-${ARCH}}"
 
           echo "bottle_specifier=$bottle_specifier" >> "$GITHUB_OUTPUT"
         env:
-          ARCH: ${{ steps.setup-cache.outputs.arch }}
+          ARCH: ${{ runner.arch }}
+          # ARCH: ${{ steps.setup-cache.outputs.arch }}
 
       - name: Build bottle for ${{ matrix.os }}
         id: build-bottle
