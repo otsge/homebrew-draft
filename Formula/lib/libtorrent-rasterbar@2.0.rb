@@ -15,12 +15,12 @@ class LibtorrentRasterbarAT20 < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/otsge/draft"
-    rebuild 1
-    sha256 cellar: :any, arm64_golden_gate: "799e755e01b51ffc4437970c60611bf337d012b5340399e2d3decee2916cdc0e"
-    sha256 cellar: :any, arm64_tahoe:       "9ba6d536d8cfa1a884b221cbab92a2ace5e17f4c8682b210ae48939eb3b47409"
-    sha256 cellar: :any, arm64_sequoia:     "8d4e56b209da8889f34fbc3c994a57963cb90e28b68050a274ed21c8cc03e768"
-    sha256 cellar: :any, arm64_linux:       "eac2169ccdedca012ecc6c2b4a632e3017f59f081558836719f96193458bbca5"
-    sha256 cellar: :any, x86_64_linux:      "fec09e6ad25dc8593515e66ef98253c4509f795e77323abe1edb25944e0f041d"
+    manifest_sha256 "31b7eede39a8f20e2c3e4b015fa106729596d45e12757fcb5654eb87974673ea"
+    sha256 cellar: :any, arm64_golden_gate: "8bc9120fde312f8600a812d0f9b4cb9c2b2b8cb9034854f80f7f0c5c79e096fd"
+    sha256 cellar: :any, arm64_tahoe:       "d646396ba6c23126c1dad1ad23fb385ee5f12a24183c16a7ac1fb97f0bb94bc4"
+    sha256 cellar: :any, arm64_sequoia:     "cdc1a17d191f3086b4530347a9dc394e5c703bf3ee267ad006afd94a87c40292"
+    sha256 cellar: :any, arm64_linux:       "d664a127410733c6ae2009a2e368d43f1c1a13d5ccfec79c0d688a010a289280"
+    sha256 cellar: :any, x86_64_linux:      "8c3e9fb1c8d74f2cdc5ff8777923484eb02f95ea646d16d5e99f59e2b99d72ac"
   end
 
   depends_on "cmake" => :build
